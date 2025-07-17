@@ -1,0 +1,23 @@
+[package]
+name = "quotesdirectlib"
+version = "1.0.7"
+authors = ["Alexey McSakoff <mcsakoff@gmail.com>"]
+description = "CQG Quotes Direct API bindings for Rust"
+repository = "https://github.com/mcsakoff/rs-quotesdirect"
+keywords = ["cqg", "quotesdirect", "api", "fix", "fast",]
+categories = ["api-bindings", "network-programming"]
+license = "MIT"
+edition = "2024"
+
+[dependencies]
+chrono = "0.4"
+fastlib = { version = "0.3" }
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = ["io-util"], optional = true }
+thiserror = "2.0"
+
+[features]
+default = []
+tokio = [
+    "dep:tokio",
+]

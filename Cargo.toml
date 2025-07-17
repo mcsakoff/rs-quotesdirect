@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+    # Quotes Direct API library
+    "rs-quotesdirectlib",
+    # Example client applications
+    "examples",
+]
+
+[patch.crates-io]
+quotesdirectlib = { path = "rs-quotesdirectlib" }
+# fastlib = { path = "../fix-fast/rs-fastlib" }

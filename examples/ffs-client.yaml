@@ -1,0 +1,6 @@
+# CBOT Incremental Feed
+connection:
+  mcast_group: 239.246.5.1
+  mcast_port: 11001
+#interface: 10.1.0.74
+#rcvbuf: 4194304

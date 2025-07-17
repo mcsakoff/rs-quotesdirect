@@ -1,0 +1,9 @@
+# Security Definition Server address and credentials
+sds:
+  host: 127.0.0.1
+  port: 2222
+  login: sds_user
+  password: sds_password
+
+# Feeds to subscribe
+feeds: 1-106 !88 !89 !97 !99
