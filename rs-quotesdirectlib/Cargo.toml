@@ -1,6 +1,6 @@
 [package]
 name = "quotesdirectlib"
-version = "1.0.7"
+version = "1.0.8"
 authors = ["Alexey McSakoff <mcsakoff@gmail.com>"]
 description = "CQG Quotes Direct API bindings for Rust"
 repository = "https://github.com/mcsakoff/rs-quotesdirect"

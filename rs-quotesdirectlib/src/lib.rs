@@ -1,12 +1,12 @@
 //! # Quotes Direct API
 //!
-//! [*CQG's Quotes Direct API*](https://help.cqg.com/apihelp/#!Documents/quotesdirectfixfast.htm) provides
+//! [*CQG Quotes Direct API*](https://help.cqg.com/apihelp/#!Documents/quotesdirectfixfast.htm) provides
 //! fast and reliable market data feeds using the industry-standard FIX formats.
 //!
 //! This library provides structures, functions and methods for:
 //! - reading TCP and UDP packets
-//! - generating outcoming FIX messages
 //! - parsing incoming FAST messages
+//! - generating outgoing FIX messages
 //!
 pub mod fast;
 pub mod fix;
