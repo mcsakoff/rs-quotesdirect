@@ -11,7 +11,7 @@ where
 {
     debug!("Loading config file: {}", path.display());
     match File::open(path) {
-        Ok(rdr) => serde_yaml::from_reader(rdr).or_else(|err| Err(anyhow!(err))),
+        Ok(rdr) => serde_yaml::from_reader(rdr).map_err(|err| anyhow!(err)),
         Err(err) => {
             bail!("Failed to open config file {}: {err}", path.display());
         }

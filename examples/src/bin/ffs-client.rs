@@ -88,7 +88,7 @@ async fn run(cfg: FFSClientConfig) -> Result<()> {
         };
 
         // Parse FAST message
-        let message: Message = match fastlib::from_slice(&mut decoder, &packet.payload) {
+        let message: Message = match fastlib::from_slice(&mut decoder, packet.payload) {
             Ok(msg) => msg,
             Err(err) => {
                 error!("Failed to parse FAST message: {err}");

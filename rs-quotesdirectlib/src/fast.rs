@@ -43,6 +43,7 @@ pub const TEMPLATES_XML: &str = include_str!("../templates.xml");
 //
 // Quotes Direct messages
 //
+#[allow(clippy::large_enum_variant)]
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 pub enum Message {
     MDIncRefresh(IncRefresh),

@@ -98,3 +98,9 @@ impl SDSClient {
         (self.defs_count as f64 / self.defs_count_total as f64) * 100.0
     }
 }
+
+impl Default for SDSClient {
+    fn default() -> Self {
+        Self::new()
+    }
+}

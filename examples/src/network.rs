@@ -30,7 +30,7 @@ pub async fn make_multicast_udp_socket(
     interface: &Option<String>,
     rcvbuf: &Option<usize>,
 ) -> Result<UdpSocket> {
-    let group = match lookup_host(&group).await {
+    let group = match lookup_host(group).await {
         Ok(group) => group,
         Err(_) => bail!("Unknown multicast group: {group}")
     };

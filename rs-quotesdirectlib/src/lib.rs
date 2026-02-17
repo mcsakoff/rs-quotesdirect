@@ -19,7 +19,7 @@ pub type Result<T, E = Error> = core::result::Result<T, E>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    ///! Errors happened due to invalid TCP packet length field or UDP packet length.
+    /// Errors happened due to invalid TCP packet length field or UDP packet length.
     #[error("Invalid packet length: {0}")]
     InvalidPacketLength(u64),
 

@@ -7,6 +7,7 @@ pub struct Feeds {
 }
 
 impl Feeds {
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(arg: &str) -> Result<Self> {
         let args = arg
             .split(" ")
@@ -72,7 +73,7 @@ impl Feeds {
         Ok(Self { feeds })
     }
 
-    pub fn iter(&self) -> Iter<u32> {
+    pub fn iter(&self) -> Iter<'_, u32> {
         self.feeds.iter()
     }
 }

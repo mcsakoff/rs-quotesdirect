@@ -103,7 +103,7 @@ async fn run(cfg: SDSClientConfig) -> Result<()> {
                 }
 
                 if !is_update && !subscribed {
-                    if sds.defs_count % 10000 == 0 || sds.is_subscribed() {
+                    if sds.defs_count.is_multiple_of(10000) || sds.is_subscribed() {
                         info!(
                             "Progress {:.1}% ({}/{})",
                             sds.progress(),
