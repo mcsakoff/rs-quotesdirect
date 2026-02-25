@@ -10,7 +10,7 @@ use quotesdirectlib::{
 };
 
 use examples::{
-    config::{read_from_file, FFSClientConfig},
+    config::{FFSClientConfig, read_from_file},
     network::make_multicast_udp_socket,
     setup_ctrl_c_handler,
 };
@@ -40,10 +40,10 @@ async fn main() -> Result<()> {
     info!("Loading config file: {}", config_path.display());
     let cfg: FFSClientConfig = read_from_file(&config_path)?;
 
-    match run(cfg).await {
-        Ok(_) => Ok(()),
+    match Box::pin(run(cfg)).await {
+        Ok(()) => Ok(()),
         Err(err) => {
-            error!("Error: {}", err);
+            error!("Error: {err}");
             Err(err)
         }
     }
@@ -52,23 +52,24 @@ async fn main() -> Result<()> {
 const MAX_DATAGRAM_SIZE: usize = 65507;
 
 async fn run(cfg: FFSClientConfig) -> Result<()> {
-    info!("Configuration: {:#?}", cfg);
+    info!("Configuration: {cfg:#?}");
 
     let socket = make_multicast_udp_socket(
         &cfg.connection.mcast_group,
         cfg.connection.mcast_port,
         &cfg.interface,
-        &cfg.rcvbuf
-    ).await?;
+        &cfg.rcvbuf,
+    )
+    .await?;
 
     let mut decoder = Decoder::new_from_xml(TEMPLATES_XML)?;
     let token = setup_ctrl_c_handler();
 
-    let mut buffer = [0u8; MAX_DATAGRAM_SIZE];
+    let mut buffer = vec![0u8; MAX_DATAGRAM_SIZE].into_boxed_slice();
     'main: loop {
         // Read raw data from socket
         let raw = tokio::select! {
-            _ = token.cancelled() => {
+            () = token.cancelled() => {
                 debug!("Got cancellation signal");
                 break 'main
             },
@@ -95,7 +96,7 @@ async fn run(cfg: FFSClientConfig) -> Result<()> {
                 continue;
             }
         };
-        info!("{:#?}", message);
+        info!("{message:#?}");
     }
     info!("Exiting...");
     Ok(())

@@ -1,10 +1,13 @@
-use anyhow::{anyhow, bail, Result};
+use anyhow::{Result, anyhow, bail};
 use log::debug;
-use serde::de;
 use serde::Deserialize;
+use serde::de;
 use std::fs::File;
 use std::path::Path;
 
+/// Read config from YAML file
+/// # Errors
+/// Returns an error if failed to open, read or parse the file.
 pub fn read_from_file<T>(path: &Path) -> Result<T>
 where
     T: de::DeserializeOwned,
@@ -26,10 +29,11 @@ pub struct SDSClientConfig {
     pub stop_on_disconnect: bool,
 }
 
+#[must_use]
 pub fn default_sds_client_config() -> SDSClientConfig {
     SDSClientConfig {
         sds: default_sds_config(),
-        feeds: "".to_string(),
+        feeds: String::new(),
         stop_on_disconnect: true,
     }
 }
@@ -43,6 +47,7 @@ pub struct SDSConfig {
     pub password: String,
 }
 
+#[must_use]
 pub fn default_sds_config() -> SDSConfig {
     SDSConfig {
         host: "127.0.0.1".to_string(),
@@ -60,11 +65,12 @@ pub struct FFSClientConfig {
     pub rcvbuf: Option<usize>,
 }
 
+#[must_use]
 pub fn default_ffs_client_config() -> FFSClientConfig {
     FFSClientConfig {
         connection: default_connection_config(),
         interface: None,
-        rcvbuf: None
+        rcvbuf: None,
     }
 }
 
@@ -75,9 +81,10 @@ pub struct ConnectionsConfig {
     pub mcast_port: u16,
 }
 
+#[must_use]
 pub fn default_connection_config() -> ConnectionsConfig {
     ConnectionsConfig {
-        mcast_group: "".to_string(),
+        mcast_group: String::new(),
         mcast_port: 0,
     }
 }

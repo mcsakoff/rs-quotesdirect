@@ -8,6 +8,7 @@ keywords = ["cqg", "quotesdirect", "api", "fix", "fast",]
 categories = ["api-bindings", "network-programming"]
 license = "MIT"
 edition = "2024"
+rust-version = "1.88.0"
 
 [dependencies]
 chrono = "0.4"

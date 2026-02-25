@@ -45,16 +45,16 @@ async fn main() -> Result<()> {
     }
 
     match run(cfg).await {
-        Ok(_) => Ok(()),
+        Ok(()) => Ok(()),
         Err(err) => {
-            error!("Error: {}", err);
+            error!("Error: {err}");
             Err(err)
         }
     }
 }
 
 async fn run(cfg: SDSClientConfig) -> Result<()> {
-    info!("Configuration: {:#?}", cfg);
+    info!("Configuration: {cfg:#?}");
 
     let feeds = Feeds::from_str(&cfg.feeds)?;
 
@@ -73,7 +73,7 @@ async fn run(cfg: SDSClientConfig) -> Result<()> {
         let message: Message;
         let is_update: bool;
         tokio::select! {
-            _ = token.cancelled() => {
+            () = token.cancelled() => {
                 // sds.logout().await?;
                 // continue 'messages;
                 break 'main;
@@ -85,7 +85,7 @@ async fn run(cfg: SDSClientConfig) -> Result<()> {
                         message = m;
                         is_update = b;
                     },
-                };
+                }
             },
         };
 
@@ -114,7 +114,9 @@ async fn run(cfg: SDSClientConfig) -> Result<()> {
                     if sds.is_subscribed() {
                         info!("Feeds subscribed");
                         let duration = start.elapsed()?;
-                        let usec_per_message = duration.as_micros() as f64 / sds.defs_count as f64;
+                        #[allow(clippy::cast_precision_loss)]
+                        let usec_per_message =
+                            duration.as_micros() as f64 / f64::from(sds.defs_count);
                         info!(
                             "{} messages processed in {} ({usec_per_message:.2}µs/msg)",
                             sds.defs_count,

@@ -9,9 +9,11 @@
 //! For FAST messages sent over TCP, a FAST encoded message length (1-3 bytes) precedes the preamble.
 //! Processing of the Preamble is optional and FAST messages will not be impacted by it.
 //!
+#![allow(clippy::cast_possible_truncation)]
+
 use std::io::{Read, Write};
 
-use crate::{Result, Error};
+use crate::{Error, Result};
 
 /// UDP packet reader
 ///
@@ -32,15 +34,18 @@ pub struct UDPPacket<'a> {
 }
 
 impl<'a> UDPPacket<'a> {
+    /// Read an `UDPPacket` from stream.
+    /// # Errors
+    /// Returns an error if the input stream cannot be read.
     pub fn read(buffer: &'a [u8]) -> Result<UDPPacket<'a>> {
         if buffer.len() < 5 {
             return Err(Error::InvalidPacketLength(buffer.len() as u64));
         }
         Ok(UDPPacket {
-            seq_num: (buffer[0] as u32) << 24
-                | (buffer[1] as u32) << 16
-                | (buffer[2] as u32) << 8
-                | (buffer[3] as u32),
+            seq_num: (u32::from(buffer[0])) << 24
+                | (u32::from(buffer[1])) << 16
+                | (u32::from(buffer[2])) << 8
+                | (u32::from(buffer[3])),
             sub_channel: buffer[4],
             payload: &buffer[5..],
         })
@@ -68,6 +73,9 @@ pub struct TCPPacket {
 }
 
 impl TCPPacket {
+    /// Read a `TCPPacket` from stream.
+    /// # Errors
+    /// Returns an error if the input stream cannot be read.
     pub fn read(input: &mut dyn Read) -> Result<Option<TCPPacket>> {
         // read length
         let len = match read_var_uint(input)? {
@@ -91,15 +99,18 @@ impl TCPPacket {
         input.read_exact(&mut payload)?;
 
         Ok(Some(TCPPacket {
-            seq_num: (buffer[0] as u32) << 24
-                | (buffer[1] as u32) << 16
-                | (buffer[2] as u32) << 8
-                | (buffer[3] as u32),
+            seq_num: (u32::from(buffer[0])) << 24
+                | (u32::from(buffer[1])) << 16
+                | (u32::from(buffer[2])) << 8
+                | (u32::from(buffer[3])),
             sub_channel: buffer[4],
             payload,
         }))
     }
 
+    /// Write a packet to the output stream.
+    /// # Errors
+    /// Returns an error if the output stream cannot be written.
     pub fn write(self, output: &mut dyn Write) -> Result<()> {
         // write length
         let len = 5 + (self.payload.len() as u64);
@@ -130,7 +141,7 @@ fn read_var_uint(input: &mut dyn Read) -> Result<Option<u64>> {
     loop {
         let byte = buffer[0];
         value <<= 7;
-        value |= (byte & 0x7f) as u64;
+        value |= u64::from(byte & 0x7f);
         if byte & 0x80 == 0x80 {
             return Ok(Some(value));
         }

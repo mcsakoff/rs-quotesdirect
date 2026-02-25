@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use bytes::Bytes;
 use fastlib::Decoder;
 use log::{debug, error};
@@ -92,9 +92,8 @@ impl SDSConnection {
                 Some(DataSource::File(ref mut file)) => file,
                 None => bail!("source not initialized"),
             };
-            let packet = match TCPPacket::read(source).await? {
-                None => return Ok(None),
-                Some(p) => p,
+            let Some(packet) = TCPPacket::read(source).await? else {
+                return Ok(None);
             };
 
             // check packet's sequence number
@@ -122,7 +121,7 @@ impl SDSConnection {
             Message::MDLogout(m) => m.msg_header.msg_seq_num,
             Message::MDSecurityDefinitionRequest(m) => m.msg_header.msg_seq_num,
             _ => {
-                bail!("unexpected SDS message: {:#?}", msg);
+                bail!("unexpected SDS message: {msg:#?}");
             }
         };
         if seq_num != self.in_seq_num_msg {
