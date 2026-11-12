@@ -9,4 +9,4 @@ members = [
 
 [patch.crates-io]
 quotesdirectlib = { path = "rs-quotesdirectlib" }
-# fastlib = { path = "../fix-fast/rs-fastlib" }
+#fastlib = { path = "../fastlib-workspace/rs-fastlib" }
